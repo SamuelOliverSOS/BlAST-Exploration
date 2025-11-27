@@ -5,7 +5,11 @@ author: "Steven Roberts"
 ---
 
 "This file is part of the process of me learning BLAST in the command pipeline! I am excited about it :)"
-
+```{R}
+# load libraries 
+library(Biostrings)
+library(Blast)
+```
 
 ```{bash}
 cd ../Data
@@ -19,7 +23,7 @@ gunzip -k uniprot_sprot_r2025_04.fasta.gz
 
 ```{bash}
 # make database 
-makeblastdb \
+sudo makeblastdb \
 -in ../Data/uniprot_sprot_r2025_04.fasta \
 -dbtype prot \
 -out ../blastdb/uniprot_sprot_r2025_04
@@ -30,7 +34,7 @@ Query
 
 ```{bash}
 cd ../Data
-wget -O Phel_cds.fa https://gannet.fish.washington.edu/seashell/bu-github/paper-pycno-sswd-2021-2022/data/augustus.hints.codingseq
+curl -O Phel_cds.fa https://gannet.fish.washington.edu/seashell/bu-github/paper-pycno-sswd-2021-2022/data/augustus.hints.codingseq
 ```
 
 
@@ -98,9 +102,12 @@ base_composition_df$ID <- rownames(base_composition_df)
 
 
 ```{R}
-base_composition_melted <- reshape2::melt(base_composition_df, id.vars = "ID",variable.name = "Base", value.name = "Count")
+library(Biostrings)
+library(reshape2)
+library(ggplot2)
+base_composition_melted <- melt(base_composition_df, id.vars = "ID",variable.name = "Base", value.name = "Count")
 # plot base compostion with a bar chart
-ggplot(base_compistion_melted, aes(x = Base, y = Count, fill = Base))+
+ggplot(base_composition_melted, aes(x = Base, y = Count, fill = Base))+
   geom_bar(stat = "identity", position = "dodge", color = "black")+
   labs(title = "Base Composition",
        x = "Base",
